@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:t3fe/SelectExcusePage.dart';
+import 'SelectExcusePage.dart';
+import 'result.dart';
 
 void main() {
   runApp(const MainApp());

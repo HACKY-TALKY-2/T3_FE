@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:t3fe/LoadExcuse.dart';
+import 'package:startup_namer/result.dart';
+import 'result.dart';
+import 'LoadExcuse.dart';
 import 'package:http/http.dart' as http;
 
 class SelectExcusePageWidget extends StatefulWidget {
@@ -32,14 +33,11 @@ class _SelectExcusePageWidgetState extends State<SelectExcusePageWidget> {
     final phoneUnitHeight = MediaQuery.of(context).size.height/844;
     final phoneUnitWidth = MediaQuery.of(context).size.width/390;
     return Scaffold(
-        appBar: ,
-        body: SafeArea(
-          child: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Align(
-                alignment: AlignmentDirectional(-1.00, 0.00),
-                child: Padding(
+                Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(phoneUnitWidth * 20, phoneUnitHeight * 20, 0, 0),
                   child: Text(
                     '변명할 대상',
@@ -49,22 +47,21 @@ class _SelectExcusePageWidgetState extends State<SelectExcusePageWidget> {
                     ),
                   ),
                 ),
-              ),
               Align(
                 alignment: AlignmentDirectional(0.00, 0.00),
                 child: Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(phoneUnitWidth * 20, phoneUnitHeight * 20, phoneUnitWidth * 20, 0),
                   child: TextFormField(
-                    controller: textController1,
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: '직장 동료',
-                      hintStyle: TextStyle(
-                        color: Color(0xff9e9e9e),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
+                      controller: textController1,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                          hintText: '직장 동료',
+                          hintStyle: TextStyle(
+                            color: Color(0xff9e9e9e),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          )
                       )
-                    )
                   ),
                 ),
               ),
@@ -199,20 +196,20 @@ class _SelectExcusePageWidgetState extends State<SelectExcusePageWidget> {
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
+                    ),
                   ),
-                ),
                 ),
               ),
               SizedBox(height: phoneUnitHeight * 30),
               ElevatedButton(
                   onPressed: ()async{
                     final response = await fetchData();
-                    final responseData = json.decode(response.body);
+                    final responseText = json.decode(response.body);
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => LoadExcusePage(),
-                      )
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ResultPage(responseText["text"]),
+                        )
                     );
                   },
                   child: Container(
@@ -231,21 +228,21 @@ class _SelectExcusePageWidgetState extends State<SelectExcusePageWidget> {
             ],
           ),
         ),
-        ),
+      ),
 
-      );
+    );
 
   }
 
   Future<http.Response> fetchData() async{
     final Map<String, dynamic> postData = {
-      "receiver":"${textController1}", "type":"${dropdownValue1}", "tone":"${dropdownValue2}", "situation":"${textController2}"
+      "receiver":textController1.text, "type":dropdownValue1, "tone":dropdownValue2, "situation":textController2.text
     };
 
     final response = await http.post(
       Uri.parse('https://excuse.withsang.com/excuse/'),
       headers: <String, String>{
-        'Content-Type':'application.json; charset=UTF-8',
+        'Content-Type':'application/json',
       },
       body: jsonEncode(postData),
     );
@@ -260,5 +257,3 @@ class _SelectExcusePageWidgetState extends State<SelectExcusePageWidget> {
   }
 
 }
-
-
